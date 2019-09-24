@@ -1,15 +1,13 @@
-<?php declare(strict_types=1);
+<?php
 
 namespace kornrunner;
 
 use InvalidArgumentException;
 use kornrunner\Serializer\HexPrivateKeySerializer;
 use kornrunner\Signature\Signer;
-use Mdanter\Ecc\Crypto\Signature\SignatureInterface;
 use Mdanter\Ecc\Curves\CurveFactory;
 use Mdanter\Ecc\Curves\SecgCurve;
 use Mdanter\Ecc\EccFactory;
-use Mdanter\Ecc\Primitives\PointInterface;
 use Mdanter\Ecc\Random\RandomGeneratorFactory;
 
 class Secp256k1
@@ -24,7 +22,7 @@ class Secp256k1
 
     protected $algorithm;
 
-    public function __construct(string $hashAlgorithm='sha256') {
+    public function __construct($hashAlgorithm='sha256') {
         $this->adapter = EccFactory::getAdapter();
         $this->generator = CurveFactory::getGeneratorByName(SecgCurve::NAME_SECP_256K1);
         $this->curve = $this->generator->getCurve();
@@ -32,7 +30,7 @@ class Secp256k1
         $this->algorithm = $hashAlgorithm;
     }
 
-    public function sign(string $hash, string $privateKey, array $options=[]): SignatureInterface {
+    public function sign($hash, $privateKey, $options=[]) {
         $key = $this->deserializer->parse($privateKey);
         $hex_hash = gmp_init($hash, 16);
 
@@ -49,7 +47,7 @@ class Secp256k1
         return $signer->sign($key, $hex_hash, $randomK);
     }
 
-    public function verify(string $hash, SignatureInterface $signature, string $publicKey): bool
+    public function verify($hash, $signature, $publicKey)
     {
         $gmpKey = $this->decodePoint($publicKey);
         $key = $this->generator->getPublickeyFrom($gmpKey->getX(), $gmpKey->getY());
@@ -59,7 +57,7 @@ class Secp256k1
         return $signer->verify($key, $signature, $hex_hash);
     }
 
-    protected function decodePoint(string $publicKey): PointInterface
+    protected function decodePoint($publicKey)
     {
         $order = $this->generator->getOrder();
         $orderString = gmp_strval($order, 16);

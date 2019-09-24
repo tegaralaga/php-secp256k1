@@ -1,24 +1,23 @@
-<?php declare(strict_types=1);
+<?php
 
 namespace kornrunner\Serializer;
 
-use Mdanter\Ecc\Crypto\Key\PrivateKeyInterface;
-use Mdanter\Ecc\Primitives\GeneratorPoint;
 use Mdanter\Ecc\Serializer\PrivateKey\PrivateKeySerializerInterface;
+use Mdanter\Ecc\Crypto\Key\PrivateKeyInterface;
 
 class HexPrivateKeySerializer implements PrivateKeySerializerInterface
 {
     protected $generator;
 
-    public function __construct(GeneratorPoint $generator) {
+    public function __construct($generator) {
         $this->generator = $generator;
     }
 
-    public function serialize(PrivateKeyInterface $key): string {
+    public function serialize(PrivateKeyInterface $key) {
         return gmp_strval($key->getSecret(), 16);
     }
 
-    public function parse(string $formattedKey): PrivateKeyInterface {
+    public function parse($formattedKey) {
         $key = gmp_init($formattedKey, 16);
 
         return $this->generator->getPrivateKeyFrom($key);

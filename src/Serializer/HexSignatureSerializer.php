@@ -1,21 +1,20 @@
-<?php declare(strict_types=1);
+<?php
 
 namespace kornrunner\Serializer;
 
 use InvalidArgumentException;
 use Mdanter\Ecc\Crypto\Signature\Signature;
-use Mdanter\Ecc\Crypto\Signature\SignatureInterface;
 
 class HexSignatureSerializer
 {
-    public function serialize(SignatureInterface $signature): string {
+    public function serialize($signature) {
         $r = $signature->getR();
         $s = $signature->getS();
 
         return str_pad(gmp_strval($r, 16), 64, '0', STR_PAD_LEFT) . str_pad(gmp_strval($s, 16), 64, '0', STR_PAD_LEFT);
     }
 
-    public function parse(string $binary): SignatureInterface {
+    public function parse($binary) {
         $binary_lower = mb_strtolower($binary);
 
         if (strpos($binary_lower, '0x') >= 0) {

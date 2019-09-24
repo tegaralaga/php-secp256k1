@@ -8,7 +8,7 @@ class Secp256k1Test extends TestCase
 {
     protected $secp256k1;
 
-    public function setUp(): void {
+    public function setUp() {
         parent::setUp();
         $this->secp256k1 = new Secp256k1();
     }
@@ -16,7 +16,7 @@ class Secp256k1Test extends TestCase
     /**
      * @dataProvider sign
      */
-    public function testSign(string $message, string $key, array $expected) {
+    public function testSign($message, $key, $expected) {
         $signature = $this->secp256k1->sign($message, $key);
 
         $this->assertEquals($expected['r'], gmp_strval($signature->getR(), 16));
@@ -24,7 +24,7 @@ class Secp256k1Test extends TestCase
         $this->assertEquals($expected['v'], $signature->getRecoveryParam());
     }
 
-    public static function sign(): array {
+    public static function sign() {
         return [
             ['98d22cdb65bbf8a392180cd2ee892b0a971c47e7d29daf31a3286d006b9db4dc', 'd0459987fdde1f41e524fddbf4b646cd9d3bea7fd7d63feead3f5dfce6174a3d', [
                 'v' => 0,
@@ -56,12 +56,12 @@ class Secp256k1Test extends TestCase
     /**
      * @dataProvider verify
      */
-    public function testVerify(string $message, string $key, string $publicKey) {
+    public function testVerify($message, $key, $publicKey) {
         $signature = $this->secp256k1->sign($message, $key);
         $this->assertTrue($this->secp256k1->verify($message, $signature, $publicKey));
     }
 
-    public static function verify (): array {
+    public static function verify () {
         return [
             ['98d22cdb65bbf8a392180cd2ee892b0a971c47e7d29daf31a3286d006b9db4dc', 'd0459987fdde1f41e524fddbf4b646cd9d3bea7fd7d63feead3f5dfce6174a3d', '04cf60398ae73fd947ffe120fba68947ec741fe696438d68a2e52caca139613ff94f220cd0d3e886f95aa226f2ad2b86be1dd5cda2813fd505d1f6a8f552904864'],
             ['710aee292b0f1749aaa0cfef67111e2f716afbdb475e7f250bdb80c6655b0a66', 'd0459987fdde1f41e524fddbf4b646cd9d3bea7fd7d63feead3f5dfce6174a3d', '04cf60398ae73fd947ffe120fba68947ec741fe696438d68a2e52caca139613ff94f220cd0d3e886f95aa226f2ad2b86be1dd5cda2813fd505d1f6a8f552904864'],

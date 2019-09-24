@@ -1,13 +1,9 @@
-<?php declare(strict_types=1);
+<?php
 
 namespace kornrunner\Signature;
 
 use GMP;
-use Mdanter\Ecc\Crypto\Key\PrivateKeyInterface;
-use Mdanter\Ecc\Crypto\Key\PublicKeyInterface;
-use Mdanter\Ecc\Crypto\Signature\SignatureInterface;
 use Mdanter\Ecc\Crypto\Signature\Signer as EccSigner;
-use Mdanter\Ecc\Math\GmpMathInterface;
 
 class Signer
 {
@@ -17,13 +13,13 @@ class Signer
 
     protected $options;
 
-    public function __construct(GmpMathInterface $adapter, array $options=[]) {
+    public function __construct($adapter, $options=[]) {
         $this->adapter = $adapter;
         $this->signer = new EccSigner($adapter);
         $this->options = $options;
     }
 
-    public function sign(PrivateKeyInterface $key, GMP $truncatedHash, GMP $randomK): SignatureInterface {
+    public function sign($key, $truncatedHash, $randomK) {
         $signature = $this->signer->sign($key, $truncatedHash, $randomK);
         $options = $this->options;
         $math = $this->adapter;
@@ -57,7 +53,7 @@ class Signer
         return new Signature($r, $s, $recoveryParam);
     }
 
-    public function verify(PublicKeyInterface $key, SignatureInterface $signature, GMP $hash): bool
+    public function verify($key, $signature, $hash)
     {
         return $this->signer->verify($key, $signature, $hash);
     }

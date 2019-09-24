@@ -10,7 +10,7 @@ class HexSignatureSerializerTest extends TestCase
     /**
      * @dataProvider data
      */
-    public function testParse(string $input, string $expect) {
+    public function testParse($input, $expect) {
         $sig = $this->sigSerializer->parse($input);
         $this->assertEquals($expect, gmp_strval($sig->getR(), 16) . gmp_strval($sig->getS(), 16));
     }
@@ -23,13 +23,13 @@ class HexSignatureSerializerTest extends TestCase
     /**
      * @dataProvider data
      */
-    public function testSerialize(string $input, string $expect) {
+    public function testSerialize($input, $expect) {
         $parsed = $this->sigSerializer->parse($input);
         $signed = $this->sigSerializer->serialize($parsed);
         $this->assertEquals($expect, $signed);
     }
 
-    public static function data(): array {
+    public static function data() {
         return [
             ['f67118680df5993e8efca4d3ecc4172ca4ac5e3e007ea774293e37386480970347427f3633371c1a30abbb2b717dbd78ef63d5b19b5a951f9d681cccdd520320', 'f67118680df5993e8efca4d3ecc4172ca4ac5e3e007ea774293e37386480970347427f3633371c1a30abbb2b717dbd78ef63d5b19b5a951f9d681cccdd520320'],
             ['0xf67118680df5993e8efca4d3ecc4172ca4ac5e3e007ea774293e37386480970347427f3633371c1a30abbb2b717dbd78ef63d5b19b5a951f9d681cccdd520320', 'f67118680df5993e8efca4d3ecc4172ca4ac5e3e007ea774293e37386480970347427f3633371c1a30abbb2b717dbd78ef63d5b19b5a951f9d681cccdd520320'],
